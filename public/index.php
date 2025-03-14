@@ -32,14 +32,14 @@ $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals(
 $router = new Router();
 $rutas = $router->getMap();
 $rutas->get("Inicio", "/", [IndexController::class, "indexAction"]);
-$rutas->get("Mostrar el añadir blog", "/blog", [BlogController::class, "blogsAction", 'auth' => true]);
-$rutas->post("Accion de añadir blog", "/blog", [BlogController::class, "blogsAction", 'auth' => true]);
-$rutas->post("addUser", "/register", [UserController::class, "userAction"]);
-$rutas->get("formuser", "/register", [UserController::class, "userAction"]);
-$rutas->post("Accion de iniciar sesión", "/login", [AuthController::class, "loginAction"]);
-$rutas->get("Mostrar el iniciar sesión", "/login", [AuthController::class, "loginAction"]);
-$rutas->get("admin", "/admin", [IndexController::class, "adminAction", 'auth' => true]);
-$rutas->get("Cerrar sesión", "/logout", [AuthController::class, "logoutAction", 'auth' => true]);
+$rutas->get("Mostrar el añadir blog", "/blog", [BlogController::class, "blogsAction", 'auth' => "usuario"]);
+$rutas->post("Accion de añadir blog", "/blog", [BlogController::class, "blogsAction", 'auth' => "usuario"]);
+$rutas->post("addUser", "/register", [UserController::class, "userAction", 'auth' => "invitado"]);
+$rutas->get("formuser", "/register", [UserController::class, "userAction", 'auth' => "invitado"]);
+$rutas->post("Accion de iniciar sesión", "/login", [AuthController::class, "loginAction", 'auth' => "invitado"]);
+$rutas->get("Mostrar el iniciar sesión", "/login", [AuthController::class, "loginAction", 'auth' => "invitado"]);
+$rutas->get("admin", "/admin", [IndexController::class, "adminAction", 'auth' => "usuario"]);
+$rutas->get("Cerrar sesión", "/logout", [AuthController::class, "logoutAction", 'auth' => "usuario"]);
 $rutas->get("Mostrar el sobre la web", "/about", [IndexController::class, "aboutAction"]);
 $rutas->get("Mostrar el contacto de la web", "/contactos", [IndexController::class, "contactAction"]);
 $rutas->get("Mostrar detalles del blog", "/showPost", [BlogController::class, "showPostAction"]);
@@ -53,11 +53,15 @@ if (!$route) {
 }
 
 $handler = $route->handler;
-$needsAuth = $handler['auth'] ?? false;
+if (isset($handler['auth'])){
+    $needsAuth = $handler['auth'];
+} else{
+    $needsAuth = false;
+}
 
 // Si la ruta necesita autenticación y el usuario no está logeado, redirigir al login
-if ($needsAuth && ($_SESSION['perfil'] ?? 'invitado') === "invitado") {
-    header("Location: /login");
+if ($needsAuth && $needsAuth !== $_SESSION['perfil']) {
+    header("Location: /");
     exit;
 }
 
