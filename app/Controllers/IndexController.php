@@ -12,20 +12,14 @@ class IndexController extends BaseController
         $blogs = Blog::with('comments')->orderBy('created_at', 'desc')->get();
     
         return $this->renderHTML('index_view.twig', [
-            'blogs' => $blogs,
+            'blogs' => $blogs, "user" => $_SESSION['perfil']
         ]);
     }
     
     public function aboutAction()
     {
         $tags = Blog::getAllTags();
-        return $this->renderHTML('about.twig', ['tags' => $tags]);
-    }
-
-    public function contactAction()
-    {
-        $tags = Blog::getAllTags();
-        return $this->renderHTML('contact.twig', ['tags' => $tags]);
+        return $this->renderHTML('about.twig', ['tags' => $tags, "user" => $_SESSION['perfil']]);
     }
 
     public function adminAction()

@@ -43,6 +43,7 @@ class BlogController extends BaseController
         $data = [
             "response" => $response ?? "",
         ];
+        $data["user"] = $_SESSION['perfil'];
         return $this->renderHTML("addBlog.twig", $data);
     }
     public function showPostAction($request)
@@ -68,6 +69,7 @@ class BlogController extends BaseController
         return $this->renderHTML('showPost.twig', [
             'blog' => $blog,
             'comments' => $comments,
+            "user" => $_SESSION['perfil']
         ]);
     }
 

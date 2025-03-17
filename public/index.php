@@ -14,13 +14,6 @@ use Aura\Router\RouterContainer as router;
 use App\Controllers\UserController;
 use App\Controllers\AuthController;
 
-// session_start();
-
-// if (!isset($_SESSION['perfil'])) {
-//     $_SESSION['user'] = 'Invitado';
-//     $_SESSION['perfil'] = "Invitado";
-// }
-
 $request = \Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER,
     $_GET,
@@ -41,7 +34,6 @@ $rutas->get("Mostrar el iniciar sesión", "/login", [AuthController::class, "log
 $rutas->get("admin", "/admin", [IndexController::class, "adminAction", 'auth' => "usuario"]);
 $rutas->get("Cerrar sesión", "/logout", [AuthController::class, "logoutAction", 'auth' => "usuario"]);
 $rutas->get("Mostrar el sobre la web", "/about", [IndexController::class, "aboutAction"]);
-$rutas->get("Mostrar el contacto de la web", "/contactos", [IndexController::class, "contactAction"]);
 $rutas->get("Mostrar detalles del blog", "/showPost", [BlogController::class, "showPostAction"]);
 $rutas->post("Agregar comentario", "/postComment", [BlogController::class, "addCommentAction"]);
 
